@@ -79,12 +79,15 @@ const MyNFTs: React.FC = () => {
     }
   }, [address, createdNFTs]);
 
+  // 字段改变
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormFields({
       ...formFields,
       [e.target.name]: e.target.value,
     });
   };
+
+  // 铸造NFT
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
@@ -103,10 +106,10 @@ const MyNFTs: React.FC = () => {
         nftDescription: formFields.nftDescription,
       };
   
-      const ipfsHash = await uploadToPinata(nftData);
+      const tokenURI = await uploadToPinata(nftData);
   
       const tx = await mintAsync({
-        args: [address, ipfsHash],
+        args: [address, tokenURI],
       });
   
       if (tx) {
@@ -114,7 +117,7 @@ const MyNFTs: React.FC = () => {
   
         const newNFT: CreatedNFT = {
           ...formFields,
-          nfturl: ipfsHash,
+          nfturl: tokenURI,
           tokenId: newId,
           owner: address,
           image: formFields.imageurl,
@@ -142,9 +145,11 @@ const MyNFTs: React.FC = () => {
           nftPrice: '',
           nftDescription: '',
         });
-  
+
+        
+        console.log("newNFT========", newNFT)
         // 向后端发送 POST 请求
-        const response = await fetch('http://localhost:5000/api/createNFT', {
+        const response = await fetch('/api/createNFT', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -163,10 +168,7 @@ const MyNFTs: React.FC = () => {
     }
   };
   
-
-
-  
-
+  // 链接钱包
   const handleConnectWallet = async () => {
     try {
       if (connectors.length > 0) {
@@ -179,6 +181,7 @@ const MyNFTs: React.FC = () => {
     }
   };
 
+  // 转移
   const handleTransfer = async (tokenId: number, toAddress: string) => {
     try {
       if (!toAddress) {
@@ -205,6 +208,7 @@ const MyNFTs: React.FC = () => {
     }
   };
 
+  // 删除
   const handleDelete = (tokenId: number) => {
     if (window.confirm('确定要删除这个 NFT 吗？')) {
       setCreatedNFTs((prevNFTs) => {
@@ -215,6 +219,7 @@ const MyNFTs: React.FC = () => {
     }
   };
 
+  // 上架
   const handleList = (tokenId: number) => {
     setFilteredNFTs((prevNFTs) => {
       const updatedNFTs = prevNFTs.map((nft) =>
@@ -225,6 +230,7 @@ const MyNFTs: React.FC = () => {
     });
   };
 
+  // 下架  
   const handleDelist = (tokenId: number) => {
     setFilteredNFTs((prevNFTs) => {
       const updatedNFTs = prevNFTs.map((nft) =>
@@ -293,6 +299,8 @@ const MyNFTs: React.FC = () => {
             <button type="submit">创建 NFT</button>
           </form>
           {error && <p className="error">{error}</p>}
+          
+          {/* NFT卡片 */}
           <div className="nft-grid">
             {filteredNFTs.map((nft) => (
               <NFTCard
