@@ -10,5 +10,6 @@ export const InheritanceTooltip = ({ inheritedFrom }: { inheritedFrom?: string }
         <InformationCircleIcon className="h-4 w-4" aria-hidden="true" />
       </span>
     )}
+    
   </>
 );
