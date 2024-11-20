@@ -120,6 +120,43 @@ const deployedContracts = {
           inputs: [
             {
               indexed: true,
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "buyer",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "seller",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "price",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "timestamp",
+              type: "uint256",
+            },
+          ],
+          name: "PurchaseNFT",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
               internalType: "address",
               name: "from",
               type: "address",
@@ -143,6 +180,37 @@ const deployedContracts = {
         {
           inputs: [
             {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "addAvailableToken",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address[]",
+              name: "recipients",
+              type: "address[]",
+            },
+            {
+              internalType: "string",
+              name: "uri",
+              type: "string",
+            },
+          ],
+          name: "airdropNFT",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
               internalType: "address",
               name: "to",
               type: "address",
@@ -156,6 +224,74 @@ const deployedContracts = {
           name: "approve",
           outputs: [],
           stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "auctions",
+          outputs: [
+            {
+              internalType: "address",
+              name: "seller",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "minBid",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "highestBid",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "highestBidder",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "endTime",
+              type: "uint256",
+            },
+            {
+              internalType: "bool",
+              name: "active",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "availableTokens",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
           type: "function",
         },
         {
@@ -185,12 +321,374 @@ const deployedContracts = {
               type: "uint256",
             },
           ],
+          name: "banshuibuyNFT",
+          outputs: [],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "burnNFT",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "buyMysteryBox",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "price",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "timestamp",
+              type: "uint256",
+            },
+            {
+              internalType: "bytes",
+              name: "signatureSeller",
+              type: "bytes",
+            },
+          ],
+          name: "buyNFTWithMultiSig",
+          outputs: [],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "price",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "timestamp",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "nonce",
+              type: "uint256",
+            },
+            {
+              internalType: "bytes",
+              name: "signatureSeller",
+              type: "bytes",
+            },
+          ],
+          name: "buyNFTWithNonce",
+          outputs: [],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "claimLoyaltyReward",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "minBid",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "duration",
+              type: "uint256",
+            },
+          ],
+          name: "createAuction",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "totalShares",
+              type: "uint256",
+            },
+          ],
+          name: "createFractionalNFT",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "rentPrice",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "duration",
+              type: "uint256",
+            },
+          ],
+          name: "createRental",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "endAuction",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "endRental",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "fractionalOwnerships",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "totalShares",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
           name: "getApproved",
           outputs: [
             {
               internalType: "address",
               name: "",
               type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+          ],
+          name: "getShares",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "getTokenRarity",
+          outputs: [
+            {
+              internalType: "enum YourCollectible.Rarity",
+              name: "",
+              type: "uint8",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "getTokenTransactionHistory",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "seller",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "buyer",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "price",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "timestamp",
+                  type: "uint256",
+                },
+              ],
+              internalType: "struct YourCollectible.TransactionHistory[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "getTotalShares",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "to",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "giftNFT",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "holdingStartTime",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
             },
           ],
           stateMutability: "view",
@@ -221,6 +719,62 @@ const deployedContracts = {
           type: "function",
         },
         {
+          inputs: [],
+          name: "loyaltyPeriod",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "loyaltyRewardClaimed",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "to",
+              type: "address",
+            },
+            {
+              internalType: "string[]",
+              name: "uris",
+              type: "string[]",
+            },
+          ],
+          name: "mintBatch",
+          outputs: [
+            {
+              internalType: "uint256[]",
+              name: "",
+              type: "uint256[]",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
           inputs: [
             {
               internalType: "address",
@@ -246,12 +800,44 @@ const deployedContracts = {
         },
         {
           inputs: [],
+          name: "mysteryBoxPrice",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
           name: "name",
           outputs: [
             {
               internalType: "string",
               name: "",
               type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "nonces",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
             },
           ],
           stateMutability: "view",
@@ -297,6 +883,57 @@ const deployedContracts = {
               type: "uint256",
             },
           ],
+          name: "placeBid",
+          outputs: [],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "profitSharingAddresses",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "profitSharingPercentages",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
           name: "purchaseNFT",
           outputs: [],
           stateMutability: "payable",
@@ -307,6 +944,71 @@ const deployedContracts = {
           name: "renounceOwnership",
           outputs: [],
           stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "rentNFT",
+          outputs: [],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "rentals",
+          outputs: [
+            {
+              internalType: "address",
+              name: "renter",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "rentPrice",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "startTime",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "duration",
+              type: "uint256",
+            },
+            {
+              internalType: "bool",
+              name: "active",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "royaltyPercentage",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
           type: "function",
         },
         {
@@ -382,6 +1084,63 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "uint256",
+              name: "newPeriod",
+              type: "uint256",
+            },
+          ],
+          name: "setLoyaltyPeriod",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "price",
+              type: "uint256",
+            },
+          ],
+          name: "setMysteryBoxPrice",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address[]",
+              name: "addresses",
+              type: "address[]",
+            },
+            {
+              internalType: "uint256[]",
+              name: "percentages",
+              type: "uint256[]",
+            },
+          ],
+          name: "setProfitSharing",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "percentage",
+              type: "uint256",
+            },
+          ],
+          name: "setRoyaltyPercentage",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
               name: "tokenId",
               type: "uint256",
             },
@@ -392,6 +1151,47 @@ const deployedContracts = {
             },
           ],
           name: "setTokenPrice",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              internalType: "enum YourCollectible.Rarity",
+              name: "rarity",
+              type: "uint8",
+            },
+          ],
+          name: "setTokenRarity",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "minBid",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "auctionDuration",
+              type: "uint256",
+            },
+          ],
+          name: "startAuction",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",
@@ -507,6 +1307,64 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "tokenRarities",
+          outputs: [
+            {
+              internalType: "enum YourCollectible.Rarity",
+              name: "",
+              type: "uint8",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "tokenTransactionHistory",
+          outputs: [
+            {
+              internalType: "address",
+              name: "seller",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "buyer",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "price",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "timestamp",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
               name: "tokenId",
               type: "uint256",
             },
@@ -567,6 +1425,29 @@ const deployedContracts = {
             },
           ],
           name: "transferOwnership",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "to",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "shares",
+              type: "uint256",
+            },
+          ],
+          name: "transferShares",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",
