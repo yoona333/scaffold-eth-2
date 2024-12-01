@@ -14,11 +14,12 @@ const nextConfig = {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;
   },
+  // 跨域配置
   async rewrites() {
     return [
       {
-        source: '/api/:path*', // 匹配所有以 /api 开头的请求
-        destination: 'http://localhost:5000/:path*', // 转发到后端服务器
+        source: "/api/:path*", // 匹配所有以 /api 开头的请求
+        destination: "http://localhost:5000/:path*", // 转发到后端服务器
       },
     ];
   },

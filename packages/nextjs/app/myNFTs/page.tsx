@@ -1,11 +1,12 @@
-'use client'
-import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
-import { useAccount, useConnect } from 'wagmi';
-import { uploadToPinata } from '~~/components/simpleNFT/pinata';
-import NFTCard from '~~/components/simpleNFT/NFTCard';
-import { notification } from '~~/utils/scaffold-eth/notification';
-import { useScaffoldContractWrite, useScaffoldContractRead } from '~~/hooks/scaffold-eth';
-import './page.css';
+"use client";
+
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import "./page.css";
+import { useAccount, useConnect } from "wagmi";
+import NFTCard from "~~/components/simpleNFT/NFTCard";
+import { uploadToPinata } from "~~/components/simpleNFT/pinata";
+import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
+import { notification } from "~~/utils/scaffold-eth/notification";
 
 interface FormFields {
   imageurl: string;
@@ -31,32 +32,37 @@ const MyNFTs: React.FC = () => {
   const { address } = useAccount();
   const { connect, connectors } = useConnect();
   const [formFields, setFormFields] = useState<FormFields>({
-    imageurl: '',
-    nftName: '',
-    nftessance: '',
-    nftholder: '',
-    nftPrice: '',
-    nftDescription: '',
-  });
-  const [createdNFTs, setCreatedNFTs] = useState<CreatedNFT[]>(() => {
-    // 从本地存储加载所有 NFT，不进行过滤
-    const savedNFTs = localStorage.getItem('createdNFTs');
-    return savedNFTs ? JSON.parse(savedNFTs) : [];
+    imageurl: "",
+    nftName: "",
+    nftessance: "",
+    nftholder: "",
+    nftPrice: "",
+    nftDescription: "",
   });
 
-  const [filteredNFTs, setFilteredNFTs] = useState<CreatedNFT[]>([]);
+  const [createdNFTs, setCreatedNFTs] = useState<CreatedNFT[]>(() => {
+    // 确保在客户端环境中执行
+    if (typeof window !== "undefined") {
+      const savedNFTs = localStorage.getItem("createdNFTs");
+      return savedNFTs ? JSON.parse(savedNFTs) : [];
+    }
+    return [];
+  });
+  
+
+  const [filteredNFTs] = useState<CreatedNFT[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const { writeAsync: mintAsync } = useScaffoldContractWrite({
-    contractName: 'YourCollectible',
-    functionName: 'mintItem',
-    args: [address, ''],
+    contractName: "YourCollectible",
+    functionName: "mintItem",
+    args: [address, ""],
   });
 
   const { writeAsync: transferAsync } = useScaffoldContractWrite({
-    contractName: 'YourCollectible',
-    functionName: 'transferFrom',
-    args: [address, '', BigInt(0)],
+    contractName: "YourCollectible",
+    functionName: "transferFrom",
+    args: [address, "", BigInt(0)],
   });
 
   const { data: tokenIdCounter } = useScaffoldContractRead({
@@ -67,17 +73,21 @@ const MyNFTs: React.FC = () => {
   });
 
   const { writeAsync: setPricetransferAsync } = useScaffoldContractWrite({
-    contractName: 'YourCollectible',
-    functionName: 'setTokenPrice',
+    contractName: "YourCollectible",
+    functionName: "setTokenPrice",
     args: [BigInt(0), BigInt(0)],
   });
 
-  useEffect(() => {
-    if (address) {
-      // 根据当前地址更新展示的 NFT 列表，这里不过滤下架的 NFT
-      setFilteredNFTs(createdNFTs.filter(nft => nft.owner.toLowerCase() === address.toLowerCase()));
+useEffect(() => {
+  if (typeof window !== "undefined") {
+    const savedNFTs = localStorage.getItem("createdNFTs");
+    if (savedNFTs) {
+      setCreatedNFTs(JSON.parse(savedNFTs));
     }
-  }, [address, createdNFTs]);
+  }
+}, []);
+
+  
 
   // 字段改变
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -94,7 +104,7 @@ const MyNFTs: React.FC = () => {
   
     try {
       if (!address) {
-        throw new Error('请先连接钱包');
+        throw new Error("请先连接钱包");
       }
   
       const nftData = {
@@ -114,7 +124,6 @@ const MyNFTs: React.FC = () => {
   
       if (tx) {
         const newId = Number(tokenIdCounter) + 1;
-  
         const newNFT: CreatedNFT = {
           ...formFields,
           nfturl: tokenURI,
@@ -127,119 +136,96 @@ const MyNFTs: React.FC = () => {
           delisted: false, // 初始为上架状态
         };
   
+        // 更新 NFT 列表和本地存储
+        const updatedNFTs = [...createdNFTs, newNFT];
+        localStorage.setItem("createdNFTs", JSON.stringify(updatedNFTs));
+        setCreatedNFTs(updatedNFTs);
+  
+        // 上链设置价格
         await setPricetransferAsync({
           args: [BigInt(newId), BigInt(formFields.nftPrice)],
         });
   
-        setCreatedNFTs((prevNFTs) => {
-          const updatedNFTs = [...prevNFTs, newNFT];
-          localStorage.setItem('createdNFTs', JSON.stringify(updatedNFTs)); // 保存到本地存储
-          return updatedNFTs;
-        });
-  
+        // 清空表单
         setFormFields({
-          imageurl: '',
-          nftName: '',
-          nftessance: '',
-          nftholder: '',
-          nftPrice: '',
-          nftDescription: '',
-        });
-
-        
-        console.log("newNFT========", newNFT)
-        // 向后端发送 POST 请求
-        const response = await fetch('/api/createNFT', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newNFT),
+          imageurl: "",
+          nftName: "",
+          nftessance: "",
+          nftholder: "",
+          nftPrice: "",
+          nftDescription: "",
         });
   
-        if (!response.ok) {
-          throw new Error('Failed to create NFT');
-        }
-  
-        notification.success('NFT 创建成功');
+        notification.success("NFT 创建成功");
       }
     } catch (error) {
       setError((error as Error).message);
     }
   };
   
+
   // 链接钱包
   const handleConnectWallet = async () => {
     try {
       if (connectors.length > 0) {
         await connect({ connector: connectors[0] });
       } else {
-        throw new Error('没有可用的连接器。');
+        throw new Error("没有可用的连接器。");
       }
     } catch (error) {
       setError((error as Error).message);
     }
   };
 
-  // 转移
+  const updateNFTs = (updatedNFTs: CreatedNFT[]) => {
+    setCreatedNFTs(updatedNFTs);
+    localStorage.setItem("createdNFTs", JSON.stringify(updatedNFTs));
+  };
+  
   const handleTransfer = async (tokenId: number, toAddress: string) => {
     try {
       if (!toAddress) {
-        notification.error('无效的接收地址');
+        notification.error("无效的接收地址");
         return;
       }
-
+  
       const tx = await transferAsync({
         args: [address, toAddress, BigInt(tokenId)],
       });
-
+  
       if (tx) {
-        setCreatedNFTs((prevNFTs) => {
-          const updatedNFTs = prevNFTs.map((nft) =>
-            nft.tokenId === tokenId ? { ...nft, owner: toAddress } : nft
-          );
-          localStorage.setItem('createdNFTs', JSON.stringify(updatedNFTs));
-          return updatedNFTs;
-        });
-        notification.success('NFT 转移成功');
+        const updatedNFTs = createdNFTs.map(nft =>
+          nft.tokenId === tokenId ? { ...nft, owner: toAddress } : nft
+        );
+        updateNFTs(updatedNFTs);
+        notification.success("NFT 转移成功");
       }
     } catch (error) {
       notification.error(`NFT 转移失败: ${(error as Error).message}`);
     }
   };
-
-  // 删除
+  
   const handleDelete = (tokenId: number) => {
-    if (window.confirm('确定要删除这个 NFT 吗？')) {
-      setCreatedNFTs((prevNFTs) => {
-        const updatedNFTs = prevNFTs.filter(nft => nft.tokenId !== tokenId);
-        localStorage.setItem('createdNFTs', JSON.stringify(updatedNFTs));
-        return updatedNFTs;
-      });
+    if (window.confirm("确定要删除这个 NFT 吗？")) {
+      const updatedNFTs = createdNFTs.filter(nft => nft.tokenId !== tokenId);
+      updateNFTs(updatedNFTs);
     }
   };
-
-  // 上架
+  
   const handleList = (tokenId: number) => {
-    setFilteredNFTs((prevNFTs) => {
-      const updatedNFTs = prevNFTs.map((nft) =>
-        nft.tokenId === tokenId ? { ...nft, delisted: false } : nft
-      );
-      localStorage.setItem('createdNFTs', JSON.stringify(updatedNFTs));
-      return updatedNFTs;
-    });
+    const updatedNFTs = createdNFTs.map(nft =>
+      nft.tokenId === tokenId ? { ...nft, delisted: false } : nft
+    );
+    updateNFTs(updatedNFTs);
   };
-
-  // 下架  
+  
   const handleDelist = (tokenId: number) => {
-    setFilteredNFTs((prevNFTs) => {
-      const updatedNFTs = prevNFTs.map((nft) =>
-        nft.tokenId === tokenId ? { ...nft, delisted: true } : nft
-      );
-      localStorage.setItem('createdNFTs', JSON.stringify(updatedNFTs));
-      return updatedNFTs;
-    });
+    const updatedNFTs = createdNFTs.map(nft =>
+      nft.tokenId === tokenId ? { ...nft, delisted: true } : nft
+    );
+    updateNFTs(updatedNFTs);
   };
+  
 
   return (
     <div className="my-nfts-container">
@@ -299,10 +285,10 @@ const MyNFTs: React.FC = () => {
             <button type="submit">创建 NFT</button>
           </form>
           {error && <p className="error">{error}</p>}
-          
+
           {/* NFT卡片 */}
           <div className="nft-grid">
-            {filteredNFTs.map((nft) => (
+            {filteredNFTs.map(nft => (
               <NFTCard
                 key={nft.tokenId}
                 nft={nft}

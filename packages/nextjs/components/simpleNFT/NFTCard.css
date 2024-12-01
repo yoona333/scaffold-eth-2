@@ -3,7 +3,9 @@
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
   width: 100%;
   max-width: 300px;
   position: relative; /* 使子元素绝对定位 */
@@ -62,10 +64,6 @@
   overflow-wrap: break-word; /* 允许在长单词内换行 */
 }
 
-
-
-
-
 /* NFTCard.css */
 /* ...其他现有样式... */
 
@@ -78,7 +76,9 @@
   border-radius: 5px;
   cursor: pointer;
   outline: none;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
   margin: 5px;
   text-transform: uppercase;
   letter-spacing: 0.05em; /* 字母间距 */
@@ -100,7 +100,7 @@
 
 /* 特定按钮的颜色 */
 .transfer-button {
-  background-color:lightpink
+  background-color: lightpink;
 }
 
 .onList-button {

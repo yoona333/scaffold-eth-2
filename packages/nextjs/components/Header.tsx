@@ -4,9 +4,9 @@ import React, { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bars3Icon, SparklesIcon,HeartIcon,CurrencyYenIcon} from "@heroicons/react/24/outline"; 
-import { useOutsideClick } from "~~/hooks/scaffold-eth";
 import { FaucetButton, RainbowKitCustomConnectButton } from "./scaffold-eth";
+import { Bars3Icon, CurrencyYenIcon, HeartIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { useOutsideClick } from "~~/hooks/scaffold-eth";
 
 type HeaderMenuLink = {
   label: string;
@@ -31,7 +31,6 @@ export const menuLinks: HeaderMenuLink[] = [
     icon: <SparklesIcon className="h-4 w-4" />,
   },
 
-  
   {
     label: "NFT制作",
     href: "/ipfsUpload",
@@ -123,10 +122,6 @@ export const Header = () => {
         <RainbowKitCustomConnectButton />
         <FaucetButton />
       </div>
-
-  
-
-
     </div>
   );
 };

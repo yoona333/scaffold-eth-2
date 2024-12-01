@@ -19,7 +19,7 @@ const Debug: NextPage = () => {
           <code className="italic bg-base-300 text-base font-bold [word-spacing:-0.5rem] px-1">
             packages / nextjs / app / debug / page.tsx
           </code>{" "}
-        </p >
+        </p>
       </div>
     </>
   );

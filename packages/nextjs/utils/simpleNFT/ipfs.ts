@@ -32,4 +32,3 @@ export async function getNFTMetadataFromIPFS(ipfsHash: string) {
     }
   }
 }
-
